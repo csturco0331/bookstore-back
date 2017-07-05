@@ -2,6 +2,9 @@ package com.pluralsight.bookstore.repository;
 
 import com.pluralsight.bookstore.model.Book;
 import com.pluralsight.bookstore.model.Language;
+import com.pluralsight.bookstore.util.IsbnGenerator;
+import com.pluralsight.bookstore.util.NumberGenerator;
+import com.pluralsight.bookstore.util.TextUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -19,17 +22,13 @@ import javax.inject.Inject;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 
 @RunWith(Arquillian.class)
 public class BookRepositoryTest {
-	
-	@Inject
-	private BookRepository bookRepository;
-	
-	static Long bookId;
 	
     @Deployment
     public static JavaArchive createDeploymentPackage() {
@@ -38,9 +37,17 @@ public class BookRepositoryTest {
             .addClass(BookRepository.class)
             .addClass(Book.class)
             .addClass(Language.class)
+            .addClass(TextUtil.class)
+            .addClass(NumberGenerator.class)
+            .addClass(IsbnGenerator.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsManifestResource("META-INF/test-persistence.xml", "persistence.xml");
     }
+    
+    @Inject
+	private BookRepository bookRepository;
+	
+	static Long bookId;
     
     @Test
     @InSequence(1)
@@ -136,23 +143,26 @@ public class BookRepositoryTest {
     	bookRepository.create(new Book("a title", "a description", .8F, "isbn", new Date(), 123, "http://blahblah", Language.ENGLISH));
     }
     
-    @Test(expected = Exception.class)
+    @Test
     @InSequence(13)
-    public void shouldNotCreateInvalidBookNullIsbn() {
-    	bookRepository.create(new Book("a title", "a description", 12F, null, new Date(), 123, "http://blahblah", Language.ENGLISH));
+    public void shouldCreateInvalidBookNullIsbn() {
+    	Book book = bookRepository.create(new Book("a title", "a description", 12F, null, new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	assertTrue(book.getIsbn().startsWith("13"));
     }
     
-    @Test(expected = Exception.class)
+    @Test
     @InSequence(14)
-    public void shouldNotCreateInvalidBookEmptyIsbn() {
-    	bookRepository.create(new Book("a title", "a description", 12F, "", new Date(), 123, "http://blahblah", Language.ENGLISH));
+    public void shouldCreateInvalidBookEmptyIsbn() {
+    	Book book = bookRepository.create(new Book("a title", "a description", 12F, "", new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	assertTrue(book.getIsbn().startsWith("13"));
     }
     
-    @Test(expected = Exception.class)
+    @Test
     @InSequence(15)
-    public void shouldNotCreateInvalidBookMaxIsbn() {
+    public void shouldCreateInvalidBookMaxIsbn() {
     	String isbn = String.join("", Collections.nCopies(51, "*"));
-    	bookRepository.create(new Book("a title", "a description", 12F, isbn, new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	Book book = bookRepository.create(new Book("a title", "a description", 12F, isbn, new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	assertTrue(book.getIsbn().startsWith("13"));
     }
     
     @Test(expected = Exception.class)
@@ -181,5 +191,20 @@ public class BookRepositoryTest {
     @InSequence(19)
     public void shouldNotDeleteInvalidId() {
     	bookRepository.delete(null);
+    }
+    
+    @Test
+    @InSequence(20)
+    public void shouldFindByTitle() {
+    	bookRepository.create(new Book("hello world", "a description", 12F, "isbn", new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	bookRepository.create(new Book("spell bound", "a description", 12F, "isbn", new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	assertEquals(2, bookRepository.findByTitle("ell").size());
+    }
+    
+    @Test
+    @InSequence(21)
+    public void shouldFindByTitleWithExtraSpaces() {
+    	bookRepository.create(new Book("Java   EE", "a description", 12F, "isbn", new Date(), 123, "http://blahblah", Language.ENGLISH));
+    	assertEquals(1, bookRepository.findByTitle("Java EE").size());
     }
 }

@@ -2,6 +2,7 @@ package com.pluralsight.bookstore.repository;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -12,10 +13,18 @@ import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
 import com.pluralsight.bookstore.model.Book;
+import com.pluralsight.bookstore.util.NumberGenerator;
+import com.pluralsight.bookstore.util.TextUtil;
 
 @Transactional(SUPPORTS) //Used for ReadOnly transactions
 public class BookRepository {
+	
+	@Inject
+	private TextUtil textUtil;
 
+	@Inject
+	private NumberGenerator generator;
+	
 	@PersistenceContext(unitName = "bookStorePU")
 	private EntityManager em;
 	
@@ -25,6 +34,8 @@ public class BookRepository {
 	
 	@Transactional(REQUIRED) //Used for WriteOnly transactions
 	public Book create(@NotNull Book book) {
+		book.setTitle(textUtil.sanitize(book.getTitle()));
+		book.setIsbn(generator.generateNumber());
 		em.persist(book);
 		return book;
 	}
@@ -35,12 +46,18 @@ public class BookRepository {
 	}
 	
 	public List<Book> findAll() {
-		TypedQuery<Book> query = em.createQuery("select b from Book b order by b.title desc", Book.class);
-		return query.getResultList();
+		return em.createQuery("select b from Book b order by b.title desc", Book.class)
+				.getResultList();
 	}
 	
 	public Long countAll() {
-		TypedQuery<Long> query = em.createQuery("select count(b) from Book b", Long.class);
-		return query.getSingleResult();
+		return em.createQuery("select count(b) from Book b", Long.class)
+				.getSingleResult();
+	}
+	
+	public List<Book> findByTitle(String title) {
+		return em.createQuery("select b from Book b where b.title like ?0", Book.class)
+				.setParameter(0, "%"+title+"%")
+				.getResultList();
 	}
 }
