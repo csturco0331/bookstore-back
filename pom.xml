@@ -2,16 +2,35 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pluralsight.javaee-getting-started.javaee-getting-started-m3</groupId>
+    <groupId>com.pluralsight.javaee-getting-started.javaee-getting-started-m6</groupId>
     <artifactId>bookstore-back</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
-    <name>Getting Started :: javaee-getting-started-m3 :: Bootstrapping the Java EE Application :: Back</name>
+    <name>Getting Started :: javaee-getting-started-m6 :: Testing the Repository :: Back</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Test -->
+        <version.junit>4.12</version.junit>
+        <version.arquillian>1.1.13.5</version.arquillian>
+        <version.arquillian.wildfly>2.0.2.Final</version.arquillian.wildfly>
+        <version.shrinkwrap>1.2.6</version.shrinkwrap>
+        <!-- Plugins -->
+        <version.surefire.plugin>2.19.1</version.surefire.plugin>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.arquillian</groupId>
+                <artifactId>arquillian-universe</artifactId>
+                <version>${version.arquillian}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -20,12 +39,47 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.arquillian.universe</groupId>
+            <artifactId>arquillian-junit</artifactId>
+            <scope>test</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+            <version>${version.shrinkwrap}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.arquillian</groupId>
+            <artifactId>wildfly-arquillian-container-remote</artifactId>
+            <version>${version.arquillian.wildfly}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>bookstore-back</finalName>
 
         <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.surefire.plugin}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <arquillian.launch>arquillian-wildfly-remote</arquillian.launch>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
