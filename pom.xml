@@ -16,6 +16,8 @@
         <version.arquillian>1.1.13.5</version.arquillian>
         <version.arquillian.wildfly>2.0.2.Final</version.arquillian.wildfly>
         <version.shrinkwrap>1.2.6</version.shrinkwrap>
+        <version.arquillian.rest>1.0.0.Alpha4</version.arquillian.rest>
+        <version.resteasy>3.1.1.Final</version.resteasy>
         <!-- Plugins -->
         <version.surefire.plugin>2.19.1</version.surefire.plugin>
     </properties>
@@ -63,6 +65,24 @@
             <groupId>org.wildfly.arquillian</groupId>
             <artifactId>wildfly-arquillian-container-remote</artifactId>
             <version>${version.arquillian.wildfly}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-rest-client-api</artifactId>
+            <version>${version.arquillian.rest}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-rest-client-impl-3x</artifactId>
+            <version>${version.arquillian.rest}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+            <version>${version.resteasy}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

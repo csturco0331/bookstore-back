@@ -1,2 +1,8 @@
 com\pluralsight\bookstore\model\Book.class
 com\pluralsight\bookstore\model\Language.class
+com\pluralsight\bookstore\util\TextUtil.class
+com\pluralsight\bookstore\util\IsbnGenerator.class
+com\pluralsight\bookstore\util\NumberGenerator.class
+com\pluralsight\bookstore\endpoint\JAXRSConfiguration.class
+com\pluralsight\bookstore\repository\BookRepository.class
+com\pluralsight\bookstore\endpoint\BookEndpoint.class

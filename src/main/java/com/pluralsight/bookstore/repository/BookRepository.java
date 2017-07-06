@@ -2,10 +2,10 @@ package com.pluralsight.bookstore.repository;
 
 import java.util.List;
 
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 

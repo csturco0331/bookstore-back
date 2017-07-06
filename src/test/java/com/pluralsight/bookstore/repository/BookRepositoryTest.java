@@ -6,11 +6,9 @@ import com.pluralsight.bookstore.util.IsbnGenerator;
 import com.pluralsight.bookstore.util.NumberGenerator;
 import com.pluralsight.bookstore.util.TextUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -22,7 +20,6 @@ import javax.inject.Inject;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
