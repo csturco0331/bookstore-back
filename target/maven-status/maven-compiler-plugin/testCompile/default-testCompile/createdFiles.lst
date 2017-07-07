@@ -1,1 +1,2 @@
 com\pluralsight\bookstore\repository\BookRepositoryTest.class
+com\pluralsight\bookstore\endpoint\BookEndpointTest.class

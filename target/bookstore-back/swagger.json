@@ -1,0 +1,226 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "BookStore APIs exposed from a Java EE back-end to an Angular front-end",
+    "version" : "1.0.0",
+    "title" : "BookStore APIs",
+    "contact" : {
+      "name" : "Cory Turco"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/bookstore-back/api",
+  "tags" : [ {
+    "name" : "Book"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/books" : {
+      "get" : {
+        "tags" : [ "Book" ],
+        "summary" : "Returns all the books",
+        "description" : "",
+        "operationId" : "findAllBooks",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Books found",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Book"
+              }
+            }
+          },
+          "204" : {
+            "description" : "No books found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Book" ],
+        "summary" : "Creates a book given a JSon Book representation",
+        "description" : "",
+        "operationId" : "createBook",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Book to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Book"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "The book is created"
+          },
+          "415" : {
+            "description" : "Format is not JSon"
+          }
+        }
+      }
+    },
+    "/books/count" : {
+      "get" : {
+        "tags" : [ "Book" ],
+        "summary" : "Returns the number of books",
+        "description" : "",
+        "operationId" : "countAllBooks",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : {
+            "description" : "Number of books found",
+            "schema" : {
+              "type" : "integer",
+              "format" : "int64"
+            }
+          },
+          "204" : {
+            "description" : "No books found"
+          }
+        }
+      }
+    },
+    "/books/{id}" : {
+      "get" : {
+        "tags" : [ "Book" ],
+        "summary" : "Returns a book given an id",
+        "description" : "",
+        "operationId" : "findBook",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "minimum" : 1.0,
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Book found",
+            "schema" : {
+              "$ref" : "#/definitions/Book"
+            }
+          },
+          "400" : {
+            "description" : "Invalid input. Id cannot be lower than 1"
+          },
+          "404" : {
+            "description" : "Book not found"
+          }
+        }
+      },
+      "/books/search" : {
+        "get" : {
+      	  "tags" : [ "Book" ],
+      	  "summary" : "Returns all books with similar given title",
+      	  "description" : "",
+      	  "operationId" : "findBookByTitle",
+      	  "parameters" : [ {
+      	    "name" : "title",
+      	    "in" : "query",
+      	    "required" : true,
+      	    "type" : "String",
+      	    "pattern": "/search?title={title}",
+      	    "format" : "String"
+          } ],
+          "responses" : {
+            "200" : {
+          	  "description" : "Book/s found"
+            },
+            "204" : {
+          	  "description" : "No books found"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Book" ],
+        "summary" : "Deletes a book given an id",
+        "description" : "",
+        "operationId" : "deleteBook",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "minimum" : 1.0,
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Book has been deleted"
+          },
+          "400" : {
+            "description" : "Invalid input. Id cannot be lower than 1"
+          },
+          "500" : {
+            "description" : "Book not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Book" : {
+      "type" : "object",
+      "required" : [ "isbn", "title" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Identifier"
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Title of the book",
+          "minLength" : 1,
+          "maxLength" : 200
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Summary describing the book",
+          "minLength" : 1,
+          "maxLength" : 10000
+        },
+        "unitCost" : {
+          "type" : "number",
+          "format" : "float",
+          "description" : "Cost of the book",
+          "minimum" : 1.0
+        },
+        "isbn" : {
+          "type" : "string",
+          "description" : "ISBN number",
+          "minLength" : 1,
+          "maxLength" : 50
+        },
+        "publicationDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Book's date of publication'"
+        },
+        "nbOfPages" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Number of pages in book"
+        },
+        "imageURL" : {
+          "type" : "string",
+          "description" : "URL of the image cover"
+        },
+        "language" : {
+          "type" : "string",
+          "description" : "Language in which the book has been written",
+          "enum" : [ "ENGLISH", "FRENCH", "SPANISH", "PORTUGUESE", "ITALIAN", "FINISH", "GERMAN", "DEUTSCH", "RUSSIAN" ]
+        }
+      },
+      "description" : "Book resource representation"
+    }
+  }
+}

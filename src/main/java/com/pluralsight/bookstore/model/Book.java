@@ -13,41 +13,54 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
+@ApiModel(description = "Book resource respresentation")
 public class Book {
 
 	@Id @GeneratedValue
+	@ApiModelProperty("Identifier")
 	private Long id;
 	
 	@Column(length = 200)
 	@NotNull
 	@Size(min=1, max=200)
+	@ApiModelProperty("Title of the book")
 	private String title;
 	
 	@Column(length = 10000)
 	@Size(min=0, max=10000)
+	@ApiModelProperty("Summary describing the book")
 	private String description;
 	
 	@Column(name = "unit_cost")
 	@Min(1)
+	@ApiModelProperty("Cost of the book")
 	private Float unitCost;
 
 	@Column(length = 50)
 	@NotNull
 	@Size(min=1, max=50)
+	@ApiModelProperty("ISBN number")
 	private String isbn; 
 	
 	@Column(name = "publication_date")
 	@Temporal(TemporalType.DATE)
 	@Past
+	@ApiModelProperty("Book's date of publication")
 	private Date publicationDate;
 	
 	@Column(name = "nb_of_pages")
+	@ApiModelProperty("Number of pages in book")
 	private Integer nbOfPages;
 	
 	@Column(name = "image_url")
+	@ApiModelProperty("URL of the image cover")
 	private String imageUrl;
 	
+	@ApiModelProperty("Language in which the book has been written")
 	private Language language;
 	
 	public Book() {
